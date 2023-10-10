@@ -1,0 +1,13 @@
+[
+    {
+        "id" : 1,
+        "Name": "Hauz Khas Social",
+        "Location": "D-88, 2nd Floor, 31st December Marg, Block D, Hauz Khas, New Delhi, Delhi 110016, India",
+        "Cuisine": "Indian, Continental, Asian",
+        "Ambiance": "Vibrant and contemporary with industrial-style decor, exposed brick walls, wooden furniture, and unique artwork. Rooftop seating with a view of Hauz Khas Lake.",
+        "Menu": "Wide range of food and beverages, including burgers, sandwiches, pasta, cocktails, mocktails, and more. Creative presentation of dishes.",
+        "Events and Activities": "Frequent events, live music performances, and social gatherings. Popular nightlife spot.",
+        "Operating Hours": "Typically open in the afternoon and late at night. Check their official website or contact them for exact hours.",
+        "Search" : ["Saket","Hauz Khas", "All Delhi"]
+    }
+]
