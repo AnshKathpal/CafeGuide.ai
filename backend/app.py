@@ -23,7 +23,7 @@ CORS(app)
 subprocess.run(["rm", "-rf", "./docs/chroma"])
 
 load_dotenv(find_dotenv())
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = os.environ["OPENAI_API_KEY2"]
 
 loader = JSONLoader(
     file_path="db.json",
@@ -77,6 +77,7 @@ qa = ConversationalRetrievalChain.from_llm(
     memory=memory
 )
 
+
 # def generate_text(prompt, max_tokens=50):
 #     response = openai.Completion.create(
 #         engine="text-davinci-003",  # Use GPT-3.5 Turbo engine
@@ -94,15 +95,31 @@ def chat():
         result = qa({"question": question})
         answer_from_chat = result["answer"]
 
+
+        chatReply = format_links_as_html(answer_from_chat)
+
+
         docs = vectordb.similarity_search(question, k=10)
         print(docs)
         response_data = {
-            "answer_from_chat": answer_from_chat
+            "answer_from_chat": chatReply
         }
         return jsonify(response_data)
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
+    
+def format_links_as_html(text):
+    # This function formats links as HTML anchor tags
+    words = text.split()
+    formatted_text = []
+    for word in words:
+        if word.startswith("http://") or word.startswith("https://"):
+            # If it's a link, format it as an HTML anchor tag
+            formatted_text.append(f'<a href="{word}" target="_blank">{word}</a>')
+        else:
+            formatted_text.append(word)
+    return " ".join(formatted_text)
 
 
 if __name__ == "__main__":
