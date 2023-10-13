@@ -133,9 +133,13 @@ product_function = [
                                     "location": {
                                         "type": "string",
                                         "description": "Recommendation Location e.g. https://maps.app.goo.gl/nkcnz3f4yCTqEvVu6"
+                                    },
+                                    "booking": {
+                                        "type": "string",
+                                        "description": "Recommendation Booking e.g. https://www.dineout.co.in/delhi/cafe-delhi-heights-rk-puram-south-delhi-20189"
                                     }
                                 },
-                                "required": ["name", "address", "rating", "image", "location"]
+                                "required": ["name", "address", "rating", "image", "location", "booking"]
                             }
                         },
                         "required": ["id", "name", "image"]

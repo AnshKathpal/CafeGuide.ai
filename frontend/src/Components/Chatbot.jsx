@@ -6,6 +6,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import styled, { keyframes } from "styled-components";
+import { FaMicrophone } from "react-icons/fa";
 
 export const Chatbot = () => {
   const {
@@ -50,7 +51,11 @@ export const Chatbot = () => {
       const updatedConversation = [
         ...chatResult,
         { role: "user", content: userMessage || transcript },
-        { role: "bot", content: updatedChatReply, images: res.data.image || []  },
+        {
+          role: "bot",
+          content: updatedChatReply,
+          images: res.data.image || [],
+        },
       ];
 
       if (res.data.image) {
@@ -99,8 +104,8 @@ export const Chatbot = () => {
   console.log(recommend, "recommend");
 
   return (
-    <Box h="100vh" display="Flex" className="main" bg="pink">
-      <Box w="35%" border="1px solid red">
+    <Box h="100vh" display="Flex" className="main" bg="rgb(243,243,243)">
+      <Box w="35%">
         {/* <Box>
           {cafeImage
             ? cafeImage.content.map((imageURL) => <img src={imageURL} alt="" />)
@@ -115,13 +120,16 @@ export const Chatbot = () => {
           pos="absolute"
           left={`${boxPosition}%`}
           top={"10%"}
-          bg="red"
+          bg="rgb(253,100,90)"
           className="recommendedBox"
           transition="left 0.5s ease-in-out"
           zIndex={-1}
           overflow="hidden"
           justifyContent={"center"}
           alignItems="center"
+          shadow={
+            "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;"
+          }
         >
           <Button
             className="slideClick"
@@ -131,67 +139,66 @@ export const Chatbot = () => {
             top="45%"
           ></Button>
 
-          <Flex direction={"column"} overflowY="scroll" maxHeight="90%" gap="2">
+          <Flex
+            direction={"column"}
+            overflowY="scroll"
+            maxHeight="90%"
+            gap="5"
+            p="2"
+          >
             {recommend.map((item) => (
               <Flex
                 direction={"column"}
-                border="1px solid white"
+                // border="1px solid white"
                 w="70%"
                 m="auto"
                 bg="white"
+                shadow={
+                  " rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset"
+                }
+                borderRadius="20px"
               >
                 <Box w="100%" p="2">
-                  <img src={item.image} alt="" />
+                  <img
+                    style={{ borderRadius: "10px" }}
+                    src={item.image}
+                    alt=""
+                  />
                 </Box>
-                <Text>{item.name}</Text>
-                <Link to={item.location}>
-                  <Text>Location</Text>
-                </Link>
-                <Text>{item.address}</Text>
-                <Text>{item.rating}</Text>
+                <Box pb="3">
+                  <Text fontSize={"lg"} fontWeight={"bold"}>
+                    {item.name}
+                  </Text>
+                  <Flex
+                    m="auto"
+                    justifyContent={"center"}
+                    alignItems="center"
+                    w="10%"
+                    h="30px"
+                    bg="rgb(92,167,39)"
+                    color="white"
+                    borderRadius="7px"
+                  >
+                    {item.rating}
+                  </Flex>
+                  <Link to={item.location}>
+                    <Text fontWeight={"bold"} color={"rgb(89,166,255)"}>
+                      Get Directions
+                    </Text>
+                  </Link>
+                  <Text>{item.address}</Text>
+                  {/* <Link to={item.booking}> */}
+                  <a href={item.booking}>
+                    <Text fontWeight={"bold"} color="rgb(253,100,90)">
+                      Reserve
+                    </Text>
+                  </a>
+                  {/* </Link> */}
+                </Box>
               </Flex>
             ))}
           </Flex>
         </Flex>
-
-        <form
-          onSubmit={handleSubmitChat}
-          action=""
-          style={{ padding: "20px", height: "20%", backgroundColor: "white" }}
-        >
-          <Button
-            onClick={SpeechRecognition.startListening}
-            style={{ marginRight: "10px" }}
-          >
-            Start Voice
-          </Button>
-          <Button onClick={stopListening} style={{ marginRight: "10px" }}>
-            Stop Voice
-          </Button>
-          <Button onClick={resetTranscript} style={{ marginRight: "10px" }}>
-            Reset Voice
-          </Button>
-          <Input
-            border="1px solid black"
-            h="50px"
-            fontSize={"xl"}
-            type="text"
-            value={userMessage || transcript}
-            onChange={(e) => setUserMessage(e.target.value)}
-            textAlign="center"
-            placeholder="Ask Questions from your PDF here.."
-            fontWeight={"semibold"}
-          />
-          <Button
-            _hover={{ bg: "#0F2C59" }}
-            color="white"
-            bg="#0F2C59"
-            mt="15px"
-            type="submit"
-          >
-            Submit
-          </Button>
-        </form>
 
         <Box h="80%" overflowY="scroll" backgroundColor={"white"}>
           {chatResult.map((message, index) => (
@@ -215,24 +222,35 @@ export const Chatbot = () => {
                 }`}
                 style={{
                   width: `${message.role === "user" ? "30%" : "70%"}`,
-                  backgroundColor: "#0F2C59",
-                  color: "white",
+                  backgroundColor: "rgb(243,243,243)",
+                  color: "black",
                   padding: "10px",
                   borderRadius: "30px",
                   boxShadow:
                     "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
                 }}
               >
-                 <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
-                 <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
+                <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                {message.role === "bot" &&
+                  message.images &&
+                  message.images.length > 0 && (
+                    <Flex p="3" justifyContent={"space-between"}>
+                      {message.images.map((imageURL) => (
+                        <img
+                          style={{
+                            width: "32%",
+                            height: "150px",
+                            borderRadius: "10px",
+                          }}
+                          key={imageURL}
+                          src={imageURL}
+                          alt=""
+                        />
+                      ))}
+                    </Flex>
+                  )}
               </div>
-              {message.role === "bot" && message.images && message.images.length > 0 && (
-                 <div>
-                 {message.images.map((imageURL) => (
-                    <img key={imageURL} src={imageURL} alt="" />
-                  ))}
-                </div>
-              )}
             </div>
           ))}
 
@@ -248,6 +266,52 @@ export const Chatbot = () => {
           )} */}
           </Box>
         </Box>
+
+        <form
+          onSubmit={handleSubmitChat}
+          action=""
+          style={{ padding: "20px", height: "20%", backgroundColor: "white" }}
+        >
+          <Flex justifyContent={"space-evenly"} alignItems="center">
+            <Input
+              border="1px solid black"
+              h="50px"
+              fontSize={"xl"}
+              type="text"
+              value={userMessage || transcript}
+              onChange={(e) => setUserMessage(e.target.value)}
+              textAlign="center"
+              placeholder="I will help you find what you need.."
+              fontWeight={"semibold"}
+              w="80%"
+            />
+            <Button
+              onClick={SpeechRecognition.startListening}
+              // style={{ marginRight: "10px" }}
+              bg="rgb(253,100,90)"
+              color={"white"}
+              _hover={{ bg: "#d8544b" }}
+              h="50px"
+            >
+              <FaMicrophone />
+            </Button>
+          </Flex>
+          {/* <Button onClick={stopListening} style={{ marginRight: "10px" }}>
+            Stop Voice
+          </Button>
+          <Button onClick={resetTranscript} style={{ marginRight: "10px" }}>
+            Reset Voice
+          </Button> */}
+          <Button
+            _hover={{ bg: "#d8544b" }}
+            color="white"
+            bg="rgb(253,100,90)"
+            mt="15px"
+            type="submit"
+          >
+            Submit
+          </Button>
+        </form>
       </Box>
     </Box>
   );
