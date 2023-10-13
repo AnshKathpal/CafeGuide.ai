@@ -17,6 +17,7 @@ export const Chatbot = () => {
   const [userMessage, setUserMessage] = useState("");
   const [chatResult, setChatResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [cafeImage,setCafeImage] = useState(null)
 
   const handleSubmitChat = async (e) => {
     e.preventDefault();
@@ -34,6 +35,7 @@ export const Chatbot = () => {
       console.log("Chat Reply:", chatReply);
 
       const updatedChatReply = formatLinksAsHTML(chatReply);
+      
 
       const updatedConversation = [
         ...chatResult,
@@ -43,7 +45,8 @@ export const Chatbot = () => {
 
       if (res.data.image) {
         // Include the "image" key in the response
-        updatedConversation.push({ role: "bot", content: res.data.image });
+        // updatedConversation.push({ role: "bot", content: res.data.image });
+        setCafeImage({ role: "bot", content: res.data.image })
       }
 
       setChatResult(updatedConversation);
@@ -73,9 +76,20 @@ export const Chatbot = () => {
 
   console.log(chatResult,"result")
 
+  console.log(cafeImage, "image");
+  
+
   return (
     <Box h="100vh" display="Flex">
-      <Box w="35%" border="1px solid red"></Box>
+      <Box w="35%" border="1px solid red">
+
+{cafeImage ? (
+  cafeImage.content.map((imageURL) => (
+    <img src={imageURL} alt="" />
+  ))
+) : null}
+
+      </Box>
       <Box w="65%" border="1px solid black">
         <form
           onSubmit={handleSubmitChat}
@@ -133,28 +147,28 @@ export const Chatbot = () => {
               }}
             >
               <div
-                className={`message-container ${
-                  message.role === "user" ? "user-message" : "bot-message"
-                }`}
-                style={{
-                  width: `${message.role === "user" ? "30%" : "70%"}`,
-                  backgroundColor: "#0F2C59",
-                  color: "white",
-                  padding: "10px",
-                  borderRadius: "30px",
-                  boxShadow:
-                    "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
-                }}
-              >
-                <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
-                {message.image ? (
-                  <img src={message.image} alt="Image" />
-                ) : (
-                  <div dangerouslySetInnerHTML={{ __html: message.content }} />
-                )}
-              </div>
+  className={`message-container ${
+    message.role === "user" ? "user-message" : "bot-message"
+  }`}
+  style={{
+    width: `${message.role === "user" ? "30%" : "70%"}`,
+    backgroundColor: "#0F2C59",
+    color: "white",
+    padding: "10px",
+    borderRadius: "30px",
+    boxShadow:
+      "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
+  }}
+>
+  <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
+  <div dangerouslySetInnerHTML={{ __html: message.content }} />
+</div>
             </div>
           ))}
+
+
+
+
           <Box>
             {/* {isLoading && (
             <div className="loader" style={{ textAlign: "center"}}>
