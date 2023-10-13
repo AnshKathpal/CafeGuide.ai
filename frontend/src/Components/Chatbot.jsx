@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Input, Button, Box } from "@chakra-ui/react";
+import { Input, Button, Box, Flex, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -100,8 +101,8 @@ export const Chatbot = () => {
         </Box>
       </Box>
       <Box w="65%" border="1px solid black" pos="relative" zIndex={1}>
-        <Box
-          border="2px solid green"
+        <Flex
+          border="1px solid green"
           w="50%"
           h="80vh"
           pos="absolute"
@@ -111,6 +112,9 @@ export const Chatbot = () => {
           className="recommendedBox"
           transition="left 0.5s ease-in-out"
           zIndex={-1}
+          overflow = "hidden"
+          justifyContent={"center"}
+          alignItems = "center"
         >
           <Button
             className="slideClick"
@@ -120,9 +124,28 @@ export const Chatbot = () => {
             top="45%"
           ></Button>
 
-          <Box>
-          </Box>
-        </Box>
+          <Flex direction={"column"} overflowY="scroll" maxHeight="90%" gap="2">
+            {recommend.map((item) => (
+              <Flex
+                direction={"column"}
+                border="1px solid white"
+                w="70%"
+                m="auto"
+                bg = "white"
+              >
+                <Box w="100%" p = "2">
+                  <img src={item.image} alt="" />
+                </Box>
+                <Text>{item.name}</Text>
+                <Link to={item.location}>
+                  <Text>Location</Text>
+                </Link>
+                <Text>{item.address}</Text>
+                <Text>{item.rating}</Text>
+              </Flex>
+            ))}
+          </Flex>
+        </Flex>
 
         <form
           onSubmit={handleSubmitChat}
