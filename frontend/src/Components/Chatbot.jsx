@@ -1,8 +1,18 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import {Input,Button,Box} from "@chakra-ui/react"
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 
 export const Chatbot = () => {
+
+  const {
+    transcript,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    startListening, // Function to start voice recognition
+    stopListening, // Function to stop voice recognition
+  } = useSpeechRecognition();
 
     const [userMessage, setUserMessage] = useState("");
     const [chatResult, setChatResult] = useState([]);
@@ -16,7 +26,7 @@ export const Chatbot = () => {
     
         try {
           let res = await axios.post("http://127.0.0.1:5000/chat", {
-            question: userMessage,
+            question:  userMessage || transcript,
           });
           console.log("Response from server:", res);
           const chatReply = await res.data.answer_from_chat;
@@ -26,13 +36,14 @@ export const Chatbot = () => {
           
           const updatedConversation = [
             ...chatResult,
-            { role: "user", content: userMessage },
+            { role: "user", content: userMessage || transcript },
             { role: "bot", content: updatedChatReply },
           ];
     
           setChatResult(updatedConversation);
           console.log("Updated Chat Reply:", updatedConversation);
           setIsLoading(false);
+          resetTranscript();
         } catch (error) {
           console.log(error.message);
         }
@@ -63,12 +74,21 @@ export const Chatbot = () => {
             action=""
             style={{ padding: "20px", height: "20%" }}
           >
+            <Button onClick={SpeechRecognition.startListening} style={{ marginRight: '10px' }}>
+          Start Voice
+        </Button>
+        <Button onClick={stopListening} style={{ marginRight: '10px' }}>
+          Stop Voice
+        </Button>
+        <Button onClick={resetTranscript} style={{ marginRight: '10px' }}>
+          Reset Voice
+        </Button>
             <Input
               border="1px solid black"
               h="50px"
               fontSize={"xl"}
               type="text"
-              value={userMessage}
+              value={userMessage || transcript}
               onChange={(e) => setUserMessage(e.target.value)}
               textAlign="center"
               placeholder="Ask Questions from your PDF here.."

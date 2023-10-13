@@ -95,9 +95,7 @@ def chat():
         result = qa({"question": question})
         answer_from_chat = result["answer"]
 
-
         chatReply = format_links_as_html(answer_from_chat)
-
 
         docs = vectordb.similarity_search(question, k=10)
         print(docs)
@@ -108,7 +106,8 @@ def chat():
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
-    
+
+
 def format_links_as_html(text):
     # This function formats links as HTML anchor tags
     words = text.split()
@@ -116,7 +115,8 @@ def format_links_as_html(text):
     for word in words:
         if word.startswith("http://") or word.startswith("https://"):
             # If it's a link, format it as an HTML anchor tag
-            formatted_text.append(f'<a href="{word}" target="_blank">{word}</a>')
+            formatted_text.append(
+                f'<a href="{word}" target="_blank">{word}</a>')
         else:
             formatted_text.append(word)
     return " ".join(formatted_text)
