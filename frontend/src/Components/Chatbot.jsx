@@ -7,6 +7,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import styled, { keyframes } from "styled-components";
 import { FaMicrophone } from "react-icons/fa";
+import logo from "../Images/logo.png"
 
 export const Chatbot = () => {
   const {
@@ -105,16 +106,19 @@ export const Chatbot = () => {
 
   return (
     <Box h="100vh" display="Flex" className="main" bg="rgb(243,243,243)">
-      <Box w="35%">
+      <Flex w="35%" pos = "relative"  justifyContent = "center" alignItems={"center"} >
+        <Box >
+        <img  style={{width : "90%", margin : "auto"}} src={logo} alt="" />
+        <Text fontSize={"6xl"} color = "rgb(249,113,87)" style={{ textShadow: "2px 2px 0 #000" }} fontFamily = "pacifico" >CafeGuide.ai</Text>
+        </Box>
         {/* <Box>
           {cafeImage
             ? cafeImage.content.map((imageURL) => <img src={imageURL} alt="" />)
             : null}
         </Box> */}
-      </Box>
-      <Box w="65%" border="1px solid black" pos="relative" zIndex={1}>
+      </Flex>
+      <Box w="65%" shadow={"rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;"} pos="relative" zIndex={1}>
         <Flex
-          border="1px solid green"
           w="50%"
           h="80vh"
           pos="absolute"
@@ -222,7 +226,7 @@ export const Chatbot = () => {
                 }`}
                 style={{
                   width: `${message.role === "user" ? "30%" : "70%"}`,
-                  backgroundColor: "rgb(243,243,243)",
+                  backgroundColor: "rgb(253,100,90)",
                   color: "black",
                   padding: "10px",
                   borderRadius: "30px",
