@@ -50,15 +50,22 @@ export const Chatbot = () => {
       const updatedConversation = [
         ...chatResult,
         { role: "user", content: userMessage || transcript },
-        { role: "bot", content: updatedChatReply },
+        { role: "bot", content: updatedChatReply, images: res.data.image || []  },
       ];
 
       if (res.data.image) {
-        // Include the "image" key in the response
-        // updatedConversation.push({ role: "bot", content: res.data.image });
-        setCafeImage({ role: "bot", content: res.data.image });
+        if (res.data.image.length > 0) {
+          // Check if there are images in the response
+          const imageContent = res.data.image.map((imageURL) => (
+            <img key={imageURL} src={imageURL} alt="" />
+          ));
+          setCafeImage({ role: "bot", content: imageContent });
+        } else {
+          setCafeImage(null);
+        }
+      } else {
+        setCafeImage(null);
       }
-
       setChatResult(updatedConversation);
       setRecommendImage(chatRecommended);
       console.log("Updated Chat Reply:", updatedConversation);
@@ -94,11 +101,11 @@ export const Chatbot = () => {
   return (
     <Box h="100vh" display="Flex" className="main" bg="pink">
       <Box w="35%" border="1px solid red">
-        <Box>
+        {/* <Box>
           {cafeImage
             ? cafeImage.content.map((imageURL) => <img src={imageURL} alt="" />)
             : null}
-        </Box>
+        </Box> */}
       </Box>
       <Box w="65%" border="1px solid black" pos="relative" zIndex={1}>
         <Flex
@@ -112,9 +119,9 @@ export const Chatbot = () => {
           className="recommendedBox"
           transition="left 0.5s ease-in-out"
           zIndex={-1}
-          overflow = "hidden"
+          overflow="hidden"
           justifyContent={"center"}
-          alignItems = "center"
+          alignItems="center"
         >
           <Button
             className="slideClick"
@@ -131,9 +138,9 @@ export const Chatbot = () => {
                 border="1px solid white"
                 w="70%"
                 m="auto"
-                bg = "white"
+                bg="white"
               >
-                <Box w="100%" p = "2">
+                <Box w="100%" p="2">
                   <img src={item.image} alt="" />
                 </Box>
                 <Text>{item.name}</Text>
@@ -216,9 +223,16 @@ export const Chatbot = () => {
                     "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
                 }}
               >
-                <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
-                <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                 <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
+                 <div dangerouslySetInnerHTML={{ __html: message.content }} />
               </div>
+              {message.role === "bot" && message.images && message.images.length > 0 && (
+                 <div>
+                 {message.images.map((imageURL) => (
+                    <img key={imageURL} src={imageURL} alt="" />
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 
