@@ -4,6 +4,7 @@ import { Input, Button, Box } from "@chakra-ui/react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import styled, { keyframes } from "styled-components";
 
 export const Chatbot = () => {
   const {
@@ -19,6 +20,13 @@ export const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [cafeImage, setCafeImage] = useState(null);
   const [recommend, setRecommendImage] = useState([]);
+
+  const [boxPosition, setBoxPosition] = useState(-3);
+
+  const handleSlideClick = () => {
+    const newPosition = boxPosition === -3 ? -49 : -3;
+    setBoxPosition(newPosition);
+  };
 
   const handleSubmitChat = async (e) => {
     e.preventDefault();
@@ -83,21 +91,43 @@ export const Chatbot = () => {
   console.log(recommend, "recommend");
 
   return (
-    <Box h="100vh" display="Flex">
+    <Box h="100vh" display="Flex" className="main" bg="pink">
       <Box w="35%" border="1px solid red">
         <Box>
           {cafeImage
             ? cafeImage.content.map((imageURL) => <img src={imageURL} alt="" />)
             : null}
         </Box>
-
-        <Box></Box>
       </Box>
-      <Box w="65%" border="1px solid black">
+      <Box w="65%" border="1px solid black" pos="relative" zIndex={1}>
+        <Box
+          border="2px solid green"
+          w="50%"
+          h="80vh"
+          pos="absolute"
+          left={`${boxPosition}%`}
+          top={"10%"}
+          bg="red"
+          className="recommendedBox"
+          transition="left 0.5s ease-in-out"
+          zIndex={-1}
+        >
+          <Button
+            className="slideClick"
+            pos={"absolute"}
+            left="0"
+            onClick={handleSlideClick}
+            top="45%"
+          ></Button>
+
+          <Box>
+          </Box>
+        </Box>
+
         <form
           onSubmit={handleSubmitChat}
           action=""
-          style={{ padding: "20px", height: "20%" }}
+          style={{ padding: "20px", height: "20%", backgroundColor: "white" }}
         >
           <Button
             onClick={SpeechRecognition.startListening}
@@ -133,7 +163,7 @@ export const Chatbot = () => {
           </Button>
         </form>
 
-        <Box h="80%" overflowY="scroll">
+        <Box h="80%" overflowY="scroll" backgroundColor={"white"}>
           {chatResult.map((message, index) => (
             <div
               key={index}
