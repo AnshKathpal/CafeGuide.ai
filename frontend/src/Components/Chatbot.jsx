@@ -41,6 +41,11 @@ export const Chatbot = () => {
         { role: "bot", content: updatedChatReply },
       ];
 
+      if (res.data.image) {
+        // Include the "image" key in the response
+        updatedConversation.push({ role: "bot", content: res.data.image });
+      }
+
       setChatResult(updatedConversation);
       console.log("Updated Chat Reply:", updatedConversation);
       setIsLoading(false);
@@ -66,88 +71,92 @@ export const Chatbot = () => {
   //   return urlPattern.test(text);
   // };
 
+  console.log(chatResult,"result")
+
   return (
-    <Box h = "100vh" display="Flex" >
-      <Box w = "35%" border = "1px solid red" >
-
-      </Box>
-      <Box w = "65%" border = "1px solid black" >
-      <form
-        onSubmit={handleSubmitChat}
-        action=""
-        style={{ padding: "20px", height: "20%" }}
-      >
-        <Button
-          onClick={SpeechRecognition.startListening}
-          style={{ marginRight: "10px" }}
+    <Box h="100vh" display="Flex">
+      <Box w="35%" border="1px solid red"></Box>
+      <Box w="65%" border="1px solid black">
+        <form
+          onSubmit={handleSubmitChat}
+          action=""
+          style={{ padding: "20px", height: "20%" }}
         >
-          Start Voice
-        </Button>
-        <Button onClick={stopListening} style={{ marginRight: "10px" }}>
-          Stop Voice
-        </Button>
-        <Button onClick={resetTranscript} style={{ marginRight: "10px" }}>
-          Reset Voice
-        </Button>
-        <Input
-          border="1px solid black"
-          h="50px"
-          fontSize={"xl"}
-          type="text"
-          value={userMessage || transcript}
-          onChange={(e) => setUserMessage(e.target.value)}
-          textAlign="center"
-          placeholder="Ask Questions from your PDF here.."
-          fontWeight={"semibold"}
-        />
-        <Button
-          _hover={{ bg: "#0F2C59" }}
-          color="white"
-          bg="#0F2C59"
-          mt="15px"
-          type="submit"
-        >
-          Submit
-        </Button>
-      </form>
-
-      <Box h="80%" overflowY="scroll">
-        {chatResult.map((message, index) => (
-          <div
-            key={index}
-            className={`message-container ${
-              message.role === "user" ? "user-message" : "bot-message"
-            }`}
-            style={{
-              display: "flex",
-              justifyContent: `${
-                message.role === "user" ? "flex-end" : "flex-start"
-              }`,
-              width: "100%",
-              padding: "10px 30px 10px 30px",
-            }}
+          <Button
+            onClick={SpeechRecognition.startListening}
+            style={{ marginRight: "10px" }}
           >
+            Start Voice
+          </Button>
+          <Button onClick={stopListening} style={{ marginRight: "10px" }}>
+            Stop Voice
+          </Button>
+          <Button onClick={resetTranscript} style={{ marginRight: "10px" }}>
+            Reset Voice
+          </Button>
+          <Input
+            border="1px solid black"
+            h="50px"
+            fontSize={"xl"}
+            type="text"
+            value={userMessage || transcript}
+            onChange={(e) => setUserMessage(e.target.value)}
+            textAlign="center"
+            placeholder="Ask Questions from your PDF here.."
+            fontWeight={"semibold"}
+          />
+          <Button
+            _hover={{ bg: "#0F2C59" }}
+            color="white"
+            bg="#0F2C59"
+            mt="15px"
+            type="submit"
+          >
+            Submit
+          </Button>
+        </form>
+
+        <Box h="80%" overflowY="scroll">
+          {chatResult.map((message, index) => (
             <div
+              key={index}
               className={`message-container ${
                 message.role === "user" ? "user-message" : "bot-message"
               }`}
               style={{
-                width: `${message.role === "user" ? "30%" : "70%"}`,
-                backgroundColor: "#0F2C59",
-                color: "white",
-                padding: "10px",
-                borderRadius: "30px",
-                boxShadow:
-                  "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
+                display: "flex",
+                justifyContent: `${
+                  message.role === "user" ? "flex-end" : "flex-start"
+                }`,
+                width: "100%",
+                padding: "10px 30px 10px 30px",
               }}
             >
-              <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
-              <div dangerouslySetInnerHTML={{ __html: message.content }} />
+              <div
+                className={`message-container ${
+                  message.role === "user" ? "user-message" : "bot-message"
+                }`}
+                style={{
+                  width: `${message.role === "user" ? "30%" : "70%"}`,
+                  backgroundColor: "#0F2C59",
+                  color: "white",
+                  padding: "10px",
+                  borderRadius: "30px",
+                  boxShadow:
+                    "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
+                }}
+              >
+                <strong>{message.role === "user" ? "You" : "Bot"}:</strong>{" "}
+                {message.image ? (
+                  <img src={message.image} alt="Image" />
+                ) : (
+                  <div dangerouslySetInnerHTML={{ __html: message.content }} />
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-        <Box>
-          {/* {isLoading && (
+          ))}
+          <Box>
+            {/* {isLoading && (
             <div className="loader" style={{ textAlign: "center"}}>
               <img
                 style={{ mixBlendMode: "multiply", width: "15%", position : "relative", left : "20px" }}
@@ -156,9 +165,8 @@ export const Chatbot = () => {
               />
             </div>
           )} */}
+          </Box>
         </Box>
-      </Box>
-
       </Box>
     </Box>
   );

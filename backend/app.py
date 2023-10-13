@@ -87,6 +87,41 @@ qa = ConversationalRetrievalChain.from_llm(
 #     return response.choices[0].text
 
 
+product_function = [
+    {
+        "name": "get_product_id",
+        "description": "Get all the id of the product from given text",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type" : "object",
+                        "properties" : {
+                            "id": {
+                                "type": "number",
+                                "description": "Product ID, e.g. 1"
+                            },
+                            "name" : {
+                                "type" : "string",
+                                "description" : "Cafe Name, e.g. Diggin"
+                            },
+                            "image" : {
+                                "type" : "string",
+                                "description" : "Cafe Image, e.g. https://im1.dineout.co.in/images/uploads/restaurant/sharpen/1/i/t/p15105-145690007356d687e9547a8.jpg?tr=tr:n-xlarge"
+                            }
+                        },
+                        "required" : ["id","name","image"]
+                    }
+                }
+            },
+            "required": ["data"]    
+        },
+    }
+]
+
+
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
@@ -95,19 +130,48 @@ def chat():
         result = qa({"question": question})
         answer_from_chat = result["answer"]
 
+
         chatReply = format_links_as_html(answer_from_chat)
 
+
         docs = vectordb.similarity_search(question, k=10)
-        print(docs)
+        # print(docs)
+
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-0613",
+            messages = [{"role" : "user", "content" : f"""{docs}"""}],
+            functions = product_function,
+            function_call = "auto"
+        )
+
+        output = completion.choices[0].message
+        print(output, "output")
+
+        arguments = json.loads(output.function_call.arguments)
+
+        print(arguments, "args")
+        ids = [item['id'] for item in arguments['data']]
+        print(ids)
+        names = [item["name"] for item in arguments["data"]]
+        print(names)
+        images = [item["image"] for item in arguments["data"]]
+        print(images)
+
         response_data = {
-            "answer_from_chat": chatReply
+            "answer_from_chat": chatReply,
+            "args" : ids,
+            "name" : names,
+            # "image" : images
         }
+
+        if "images" in question.lower():
+            response_data["image"] = images
+            
         return jsonify(response_data)
     except Exception as e:
         error_message = str(e)
         return jsonify({"error": error_message}), 500
-
-
+    
 def format_links_as_html(text):
     # This function formats links as HTML anchor tags
     words = text.split()
@@ -115,8 +179,7 @@ def format_links_as_html(text):
     for word in words:
         if word.startswith("http://") or word.startswith("https://"):
             # If it's a link, format it as an HTML anchor tag
-            formatted_text.append(
-                f'<a href="{word}" target="_blank">{word}</a>')
+            formatted_text.append(f'<a href="{word}" target="_blank">{word}</a>')
         else:
             formatted_text.append(word)
     return " ".join(formatted_text)
