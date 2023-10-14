@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Input, Button, Box, Flex, Text } from "@chakra-ui/react";
+import { Input, Button, Box, Flex, Text, Grid } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -8,6 +8,7 @@ import SpeechRecognition, {
 import styled, { keyframes } from "styled-components";
 import { FaMicrophone } from "react-icons/fa";
 import logo from "../Images/logo.png"
+import loading from "../Images/loader.gif"
 
 export const Chatbot = () => {
   const {
@@ -134,6 +135,7 @@ export const Chatbot = () => {
           shadow={
             "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;"
           }
+          borderRadius = "10px"
         >
           <Button
             className="slideClick"
@@ -204,7 +206,7 @@ export const Chatbot = () => {
           </Flex>
         </Flex>
 
-        <Box h="80%" overflowY="scroll" backgroundColor={"white"}>
+        <Box h="80%" overflowY="scroll" backgroundColor={"white"} p = "5">
           {chatResult.map((message, index) => (
             <div
               key={index}
@@ -239,11 +241,11 @@ export const Chatbot = () => {
                 {message.role === "bot" &&
                   message.images &&
                   message.images.length > 0 && (
-                    <Flex p="3" justifyContent={"space-between"}>
+                    <Grid templateColumns={"repeat(3,1fr)"} gap = "3" p = "3" >
                       {message.images.map((imageURL) => (
                         <img
                           style={{
-                            width: "32%",
+                            // width: "32%",
                             height: "150px",
                             borderRadius: "10px",
                           }}
@@ -252,22 +254,22 @@ export const Chatbot = () => {
                           alt=""
                         />
                       ))}
-                    </Flex>
+                    </Grid>
                   )}
               </div>
             </div>
           ))}
 
           <Box>
-            {/* {isLoading && (
+            {isLoading && (
             <div className="loader" style={{ textAlign: "center"}}>
               <img
-                style={{ mixBlendMode: "multiply", width: "15%", position : "relative", left : "20px" }}
+                style={{ mixBlendMode: "multiply", width: "15%", position : "relative", left : "40%" }}
                 src={loading}
                 alt=""
               />
             </div>
-          )} */}
+          )}
           </Box>
         </Box>
 
