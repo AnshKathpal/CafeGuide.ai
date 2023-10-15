@@ -251,6 +251,5 @@ def format_links_as_html(text):
             formatted_text.append(word)
     return " ".join(formatted_text)
 
-
 if __name__ == "__main__":
     app.run(debug=True)

@@ -9,6 +9,8 @@ import styled, { keyframes } from "styled-components";
 import { FaMicrophone } from "react-icons/fa";
 import logo from "../Images/logo.png"
 import loading from "../Images/loader.gif"
+import { Progress } from "@chakra-ui/progress";
+
 
 export const Chatbot = () => {
   const {
@@ -25,12 +27,31 @@ export const Chatbot = () => {
   const [cafeImage, setCafeImage] = useState(null);
   const [recommend, setRecommendImage] = useState([]);
   const [isSubmitting,setIsSubmitting] = useState(false)
+  const [progress, setProgress] = useState(0);
+
 
   const [boxPosition, setBoxPosition] = useState(-3);
 
   const handleSlideClick = () => {
     const newPosition = boxPosition === -3 ? -49 : -3;
     setBoxPosition(newPosition);
+  };
+
+
+  const simulateLoading = () => {
+    setProgress(0); // Reset progress to 0
+  
+    const interval = 100; // Adjust this interval as needed
+    const duration = 143000; // Adjust this duration as needed
+  
+    const steps = duration / interval;
+  
+    for (let i = 0; i <= steps; i++) {
+      setTimeout(() => {
+        const newProgress = (i / steps) * 100;
+        setProgress(newProgress);
+      }, i * interval);
+    }
   };
 
   const handleSubmitChat = async (e) => {
@@ -44,6 +65,7 @@ export const Chatbot = () => {
     setIsLoading(true);
     setUserMessage("");
     resetTranscript();
+    simulateLoading();
 
     try {
       let res = await axios.post("http://127.0.0.1:5000/chat", {
@@ -273,6 +295,7 @@ export const Chatbot = () => {
                 src={loading}
                 alt=""
               />
+            <div style={{ fontSize: "24px" }}>{Math.round(progress)}%</div>
             </div>
           )}
           </Box>
@@ -295,6 +318,7 @@ export const Chatbot = () => {
               placeholder="I will help you find what you need.."
               fontWeight={"semibold"}
               w="80%"
+              isDisabled = {isSubmitting}
             />
             <Button
               onClick={SpeechRecognition.startListening}
