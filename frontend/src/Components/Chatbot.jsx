@@ -24,6 +24,7 @@ export const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [cafeImage, setCafeImage] = useState(null);
   const [recommend, setRecommendImage] = useState([]);
+  const [isSubmitting,setIsSubmitting] = useState(false)
 
   const [boxPosition, setBoxPosition] = useState(-3);
 
@@ -35,6 +36,11 @@ export const Chatbot = () => {
   const handleSubmitChat = async (e) => {
     e.preventDefault();
 
+    if(isSubmitting){
+      return
+    }
+
+    setIsSubmitting(true)
     setIsLoading(true);
     setUserMessage("");
     resetTranscript();
@@ -77,6 +83,7 @@ export const Chatbot = () => {
       setRecommendImage(chatRecommended);
       console.log("Updated Chat Reply:", updatedConversation);
       setIsLoading(false);
+      setIsSubmitting(false)
     } catch (error) {
       console.log(error.message);
     }
@@ -105,6 +112,8 @@ export const Chatbot = () => {
 
   console.log(recommend, "recommend");
 
+  console.log(isSubmitting, "submitted");
+
   return (
     <Box h="100vh" display="Flex" className="main" bg="rgb(243,243,243)">
       <Flex w="35%" pos = "relative"  justifyContent = "center" alignItems={"center"} >
@@ -112,11 +121,6 @@ export const Chatbot = () => {
         <img  style={{width : "90%", margin : "auto"}} src={logo} alt="" />
         <Text fontSize={"6xl"} color = "rgb(249,113,87)" style={{ textShadow: "2px 2px 0 #000" }} fontFamily = "pacifico" >CafeGuide.ai</Text>
         </Box>
-        {/* <Box>
-          {cafeImage
-            ? cafeImage.content.map((imageURL) => <img src={imageURL} alt="" />)
-            : null}
-        </Box> */}
       </Flex>
       <Box w="65%" shadow={"rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;"} pos="relative" zIndex={1}>
         <Flex
@@ -155,7 +159,7 @@ export const Chatbot = () => {
             {recommend.map((item) => (
               <Flex
                 direction={"column"}
-                // border="1px solid white"
+    
                 w="70%"
                 m="auto"
                 bg="white"
@@ -228,10 +232,11 @@ export const Chatbot = () => {
                 }`}
                 style={{
                   width: `${message.role === "user" ? "30%" : "70%"}`,
-                  backgroundColor: "rgb(253,100,90)",
+                  backgroundColor: "#ece8e8",
                   color: "black",
                   padding: "10px",
                   borderRadius: "30px",
+                  fontFamily : "Cabin",
                   boxShadow:
                     "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
                 }}
@@ -262,7 +267,7 @@ export const Chatbot = () => {
 
           <Box>
             {isLoading && (
-            <div className="loader" style={{ textAlign: "center"}}>
+            <div  className="loader" style={{ textAlign: "center", marginTop : "60px"}}>
               <img
                 style={{ mixBlendMode: "multiply", width: "15%", position : "relative", left : "40%" }}
                 src={loading}
@@ -298,6 +303,7 @@ export const Chatbot = () => {
               color={"white"}
               _hover={{ bg: "#d8544b" }}
               h="50px"
+              isDisabled = {isSubmitting}
             >
               <FaMicrophone />
             </Button>
@@ -314,6 +320,7 @@ export const Chatbot = () => {
             bg="rgb(253,100,90)"
             mt="15px"
             type="submit"
+            isDisabled = {isSubmitting}
           >
             Submit
           </Button>
