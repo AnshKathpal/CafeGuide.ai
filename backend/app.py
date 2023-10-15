@@ -204,6 +204,11 @@ def chat():
     except Exception as e:
         error_message = e
         return jsonify({"error": error_message}), 500
+
+
+@app.route("/")
+def home():
+    return "Home page"
       
 
 

@@ -1,0 +1,11 @@
+Flask
+Flask_Cors
+python-dotenv
+chromadb
+tiktoken
+pymongo
+pinecone-client
+langchain
+openai
+jq
+Flask-PyMongo
