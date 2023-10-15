@@ -15,13 +15,6 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 import subprocess
 import json
-from flask_pymongo import PyMongo
-from pymongo.errors import ServerSelectionTimeoutError
-# import pymongo
-# import datetime
-# from pymongo.mongo_client import MongoClient
-# from pymongo.server_api import ServerApi
-
 
 
 
@@ -32,18 +25,6 @@ subprocess.run(["rm", "-rf", "./docs/chroma"])
 
 load_dotenv(find_dotenv())
 openai.api_key = os.environ["OPENAI_API_KEY"]
-
-# app.config["MONGO_URI"] = "mongodb+srv://anshkathpal:anshkathpal2909@cluster0.j30kfoz.mongodb.net/cafeguide_history?retryWrites=true&w=majority"
-
-# client = MongoClient(uri, server_api=ServerApi('1'))
-
-# try:
-#     mongodb_client = PyMongo(app)
-#     db = mongodb_client.db
-#     chat_history_collection = db.chat_history
-#     print("Pinged your deployment. You successfully connected to MongoDB!")
-# except Exception as e:
-#     print("error",e)
 
 
 loader = JSONLoader(
@@ -99,7 +80,6 @@ qa = ConversationalRetrievalChain.from_llm(
     retriever=retriever,
     memory=memory
 )
-
 
 
 product_function = [
@@ -170,19 +150,17 @@ product_function = [
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
+
+       
+    
         data = request.json
         question = data.get("question")
         result = qa({"question": question})
         answer_from_chat = result["answer"]
 
+
         chatReply = format_links_as_html(answer_from_chat)
 
-
-        # chat_entry = {
-        #     "question": question,
-        #     "answer_from_chat": chatReply
-        # }
-        # chat_history_collection.insert_one(chat_entry)
 
         docs = vectordb.similarity_search(question, k=10)
         # print(docs)
@@ -222,20 +200,11 @@ def chat():
             response_data["image"] = images
 
         return jsonify(response_data)
-    except ServerSelectionTimeoutError as e:
-        error_message = "Server selection timed out. Please check your MongoDB connection."
-        return jsonify({"error": error_message}), 500
+    
     except Exception as e:
         error_message = e
         return jsonify({"error": error_message}), 500
-    
-
-
-# @app.route("/get_chat_history", methods=["GET"])
-# def get_chat_history():
-#     chat_history = chat_history_collection.find()
-#     chat_history_list = [chat for chat in chat_history]
-#     return jsonify(chat_history_list)    
+      
 
 
 def format_links_as_html(text):

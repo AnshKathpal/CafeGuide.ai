@@ -7,10 +7,9 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import styled, { keyframes } from "styled-components";
 import { FaMicrophone } from "react-icons/fa";
-import logo from "../Images/logo.png"
-import loading from "../Images/loader.gif"
+import logo from "../Images/logo.png";
+import loading from "../Images/loader.gif";
 import { Progress } from "@chakra-ui/progress";
-
 
 export const Chatbot = () => {
   const {
@@ -26,46 +25,51 @@ export const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [cafeImage, setCafeImage] = useState(null);
   const [recommend, setRecommendImage] = useState([]);
-  const [isSubmitting,setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
-
 
   const [boxPosition, setBoxPosition] = useState(-3);
 
+  const [boxPositiotop,setBoxPositionTop] = useState(-66)
+
   const handleSlideClick = () => {
+    if (window.innerWidth >= 479) {
     const newPosition = boxPosition === -3 ? -49 : -3;
     setBoxPosition(newPosition);
-  };
-
-
-  const simulateLoading = () => {
-    setProgress(0); // Reset progress to 0
-  
-    const interval = 100; // Adjust this interval as needed
-    const duration = 143000; // Adjust this duration as needed
-  
-    const steps = duration / interval;
-  
-    for (let i = 0; i <= steps; i++) {
-      setTimeout(() => {
-        const newProgress = (i / steps) * 100;
-        setProgress(newProgress);
-      }, i * interval);
+    }else if(window.innerWidth <= 479){
+      const newPosition = boxPositiotop === -66 ? 2 : -66;
+      setBoxPositionTop(newPosition);
     }
   };
+
+  // const simulateLoading = () => {
+  //   setProgress(0); // Reset progress to 0
+
+  //   const interval = 100; // Adjust this interval as needed
+  //   const duration = 143000; // Adjust this duration as needed
+
+  //   const steps = duration / interval;
+
+  //   for (let i = 0; i <= steps; i++) {
+  //     setTimeout(() => {
+  //       const newProgress = (i / steps) * 100;
+  //       setProgress(newProgress);
+  //     }, i * interval);
+  //   }
+  // };
 
   const handleSubmitChat = async (e) => {
     e.preventDefault();
 
-    if(isSubmitting){
-      return
+    if (isSubmitting) {
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     setIsLoading(true);
     setUserMessage("");
     resetTranscript();
-    simulateLoading();
+    // simulateLoading();
 
     try {
       let res = await axios.post("http://127.0.0.1:5000/chat", {
@@ -105,7 +109,7 @@ export const Chatbot = () => {
       setRecommendImage(chatRecommended);
       console.log("Updated Chat Reply:", updatedConversation);
       setIsLoading(false);
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -137,39 +141,77 @@ export const Chatbot = () => {
   console.log(isSubmitting, "submitted");
 
   return (
-    <Box h="100vh" display="Flex" className="main" bg="rgb(243,243,243)">
-      <Flex w="35%" pos = "relative"  justifyContent = "center" alignItems={"center"} >
+    <Box
+      h="100vh"
+      display="Flex"
+      className="main"
+      bg="rgb(243,243,243)"
+      flexDirection={{ base: "column", sm: "row" }}
+    >
+      <Flex
+        w={{ base: "100%", sm: "35%" }}
+        pos="relative"
+        // border = "1px solid blue"
+        justifyContent="center"
+        alignItems={"center"}
+        bg = "rgb(243,243,243)"
+        zIndex={{base : "2", sm : "0"}}
+      >
         <Box >
-        <img  style={{width : "90%", margin : "auto"}} src={logo} alt="" />
-        <Text fontSize={"6xl"} color = "rgb(249,113,87)" style={{ textShadow: "2px 2px 0 #000" }} fontFamily = "pacifico" >CafeGuide.ai</Text>
+          <LogoImg
+            style={{ width: "90%", margin: "auto" }}
+            src={logo}
+            alt=""
+          />
+          <Text
+            fontSize={{base : "5xl" , sm : "6xl"}}
+            p = {{base : 4, sm : 0}}
+            color="rgb(249,113,87)"
+            style={{ textShadow: "2px 2px 0 #000" }}
+            fontFamily="pacifico"
+          >
+            CafeGuide.ai
+          </Text>
         </Box>
       </Flex>
-      <Box w="65%" shadow={"rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;"} pos="relative" zIndex={1}>
+      <Box
+        w={{ base: "100%", sm: "65%" }}
+        top={{ base: "0", sm: "0" }}
+        h={{ base: "88vh", sm: "auto" }}
+        shadow={
+          "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;"
+        }
+        pos="relative"
+        zIndex={1}
+      >
         <Flex
-          w="50%"
-          h="80vh"
+          // display="none"
+          w={{base : "85%", sm : "50%"}}
+          h={{base : "60vh", sm : "80vh"}}
           pos="absolute"
-          left={`${boxPosition}%`}
-          top={"10%"}
+          left={{base : "7%", sm : `${boxPosition}%`}}
+          top={{base : `${boxPositiotop}%`, sm : "10%"}}
           bg="rgb(253,100,90)"
           className="recommendedBox"
-          transition="left 0.5s ease-in-out"
-          zIndex={-1}
+          transition={{base : "top 0.5s ease-in-out", sm : "left 0.5s ease-in-out"}}
+          zIndex={{base : "1", sm : "-1"}}
           overflow="hidden"
           justifyContent={"center"}
           alignItems="center"
           shadow={
             "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;"
           }
-          borderRadius = "10px"
+          borderRadius="10px"
         >
           <Button
             className="slideClick"
             pos={"absolute"}
-            left="0"
+            left={{base : "44%", sm : "0"}}
             onClick={handleSlideClick}
-            top="45%"
-          ></Button>
+            top={{base : "95%", sm : "45%"}}
+            w = {{base : "50px", sm : "10px"}}
+            h = {{base : "20px", sm : "40px"}}
+          > </Button>
 
           <Flex
             direction={"column"}
@@ -181,7 +223,6 @@ export const Chatbot = () => {
             {recommend.map((item) => (
               <Flex
                 direction={"column"}
-    
                 w="70%"
                 m="auto"
                 bg="white"
@@ -190,7 +231,7 @@ export const Chatbot = () => {
                 }
                 borderRadius="20px"
               >
-                <Box w="100%" p="2">
+                <Box w="100%" p={{base : "3", sm : "2"}}>
                   <img
                     style={{ borderRadius: "10px" }}
                     src={item.image}
@@ -232,9 +273,14 @@ export const Chatbot = () => {
           </Flex>
         </Flex>
 
-        <Box h="80%" overflowY="scroll" backgroundColor={"white"} p = "5">
+        <Box
+          h="80%"
+          overflowY="scroll"
+          backgroundColor={"white"}
+          p={{ base: "1", sm: "5" }}
+        >
           {chatResult.map((message, index) => (
-            <div
+            <ChatConvo
               key={index}
               className={`message-container ${
                 message.role === "user" ? "user-message" : "bot-message"
@@ -245,7 +291,6 @@ export const Chatbot = () => {
                   message.role === "user" ? "flex-end" : "flex-start"
                 }`,
                 width: "100%",
-                padding: "10px 30px 10px 30px",
               }}
             >
               <div
@@ -253,12 +298,12 @@ export const Chatbot = () => {
                   message.role === "user" ? "user-message" : "bot-message"
                 }`}
                 style={{
-                  width: `${message.role === "user" ? "30%" : "70%"}`,
+                  width: `${message.role === "user" ? "50%" : "80%"}`,
                   backgroundColor: "#ece8e8",
                   color: "black",
                   padding: "10px",
                   borderRadius: "30px",
-                  fontFamily : "Cabin",
+                  fontFamily: "Cabin",
                   boxShadow:
                     "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
                 }}
@@ -268,7 +313,7 @@ export const Chatbot = () => {
                 {message.role === "bot" &&
                   message.images &&
                   message.images.length > 0 && (
-                    <Grid templateColumns={"repeat(3,1fr)"} gap = "3" p = "3" >
+                    <Grid  templateColumns={{base : "repeat(1,1fr)", sm : "repeat(3,1fr)"}} gap="3" p="3" placeItems={"center"}>
                       {message.images.map((imageURL) => (
                         <img
                           style={{
@@ -284,27 +329,33 @@ export const Chatbot = () => {
                     </Grid>
                   )}
               </div>
-            </div>
+            </ChatConvo>
           ))}
 
           <Box>
             {isLoading && (
-            <div  className="loader" style={{ textAlign: "center", marginTop : "60px"}}>
-              <img
-                style={{ mixBlendMode: "multiply", width: "15%", position : "relative", left : "40%" }}
-                src={loading}
-                alt=""
-              />
-            <div style={{ fontSize: "24px" }}>{Math.round(progress)}%</div>
-            </div>
-          )}
+              <div
+                className="loader"
+                style={{ textAlign: "center", marginTop: "60px" }}
+              >
+                <LoadingImg
+                  style={{
+                    mixBlendMode: "multiply",
+                    position: "relative",
+                  }}
+                  src={loading}
+                  alt=""
+                />
+                {/* <div style={{ fontSize: "24px" }}>{Math.round(progress)}%</div> */}
+              </div>
+            )}
           </Box>
         </Box>
 
-        <form
+        <Form
           onSubmit={handleSubmitChat}
           action=""
-          style={{ padding: "20px", height: "20%", backgroundColor: "white" }}
+          style={{ height: "20%", backgroundColor: "white" }}
         >
           <Flex justifyContent={"space-evenly"} alignItems="center">
             <Input
@@ -318,7 +369,7 @@ export const Chatbot = () => {
               placeholder="I will help you find what you need.."
               fontWeight={"semibold"}
               w="80%"
-              isDisabled = {isSubmitting}
+              isDisabled={isSubmitting}
             />
             <Button
               onClick={SpeechRecognition.startListening}
@@ -327,7 +378,7 @@ export const Chatbot = () => {
               color={"white"}
               _hover={{ bg: "#d8544b" }}
               h="50px"
-              isDisabled = {isSubmitting}
+              isDisabled={isSubmitting}
             >
               <FaMicrophone />
             </Button>
@@ -344,12 +395,54 @@ export const Chatbot = () => {
             bg="rgb(253,100,90)"
             mt="15px"
             type="submit"
-            isDisabled = {isSubmitting}
+            isDisabled={isSubmitting}
           >
             Submit
           </Button>
-        </form>
+        </Form>
       </Box>
     </Box>
   );
 };
+
+const Form = styled.form`
+  padding: 20px;
+
+  @media screen and (max-width: 479px) {
+    padding: 5px;
+  }
+`;
+
+
+const LoadingImg = styled.img`
+
+width : 15%;
+left : 40%;
+
+@media screen and (max-width: 479px) {
+  width : 30%;
+  left : 35%;
+  }
+
+`
+
+const ChatConvo = styled.div`
+
+padding: 10px 30px 10px 30px;
+
+
+@media screen and (max-width: 479px) {
+  margin-top : 30px
+  }
+
+`
+
+const LogoImg = styled.img`
+
+display : inline;
+
+@media screen and (max-width: 479px) {
+  display : none;
+  }
+
+`
