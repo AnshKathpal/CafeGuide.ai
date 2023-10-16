@@ -15,7 +15,8 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 import subprocess
 import json
-
+import requests
+import sseclient
 
 
 app = Flask(__name__)
@@ -26,6 +27,54 @@ subprocess.run(["rm", "-rf", "./docs/chroma"])
 load_dotenv(find_dotenv())
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
+
+# stream_url = "https://api.openai.com/v1/engines/davinci/completions"
+
+# prompt = "What is Python?"
+
+# params = {
+#     "model": "davinci",
+#     "prompt": prompt,
+#     "max_tokens": 100,
+#     "temperature": 0.7,
+#     "stop": None,
+#     "stream": True
+# }
+
+# response = requests.post(stream_url, headers={"Authorization": f"Bearer {openai.api_key}"}, json=params, stream=True)
+# for line in response.iter_lines():
+#     if line:
+#         response_data = json.loads(line)
+#         choices = response_data['choices']
+#         if choices:
+#             for choice in choices:
+#                 content = choice['text']
+#                 # Process or print the content as needed
+#                 print(content)
+
+
+
+# def performStreaming():
+#     requrl = "https://api.openai.com/v1/engines/davinci/completions"
+#     reqHeaders = {
+#         "Accept" : "text/event-stream",
+#         "Authorization" : "Bearer " + openai.api_key
+#     }
+#     reqBody = {
+#         "model" : "gpt-3.5-turbo-0613",
+#         "prompt" : "What is Python",
+#         "max_tokens" : 100,
+#         "temperature" : 0,
+#         "stream" : True
+#     }
+
+#     request = requests.post(requrl,stream = True, headers = reqHeaders,json = reqBody)
+#     client = sseclient.SSEClient(request)
+#     for event in client.events():
+#         if event.data != '[DONE]':
+#             print(json.loads(event.data)['choices'][0]['text'],end = "",flush = True)
+
+    
 
 loader = JSONLoader(
     file_path="db.json",
@@ -227,3 +276,4 @@ def format_links_as_html(text):
 
 if __name__ == "__main__":
     app.run(debug=True)
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Input, Button, Box, Flex, Text, Grid } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
@@ -11,6 +11,17 @@ import logo from "../Images/logo.png";
 import loading from "../Images/loader.gif";
 import { Progress } from "@chakra-ui/progress";
 
+const messages = [
+  "Don't rush loading; savor your cafe plans instead.",
+  "While our app loads, we're brewing up the perfect cafe experience just for you.",
+  "I asked my app how it's doing, and it replied, 'Still loading... and searching the best for you.",
+  "Slow loading, quick romantic date – that's our promise.",
+  "Delay the app, not the romance. Plan your date as we load.",
+  "Loading delay: the perfect time to dream of a romantic date.",
+  "Loading for your cafe party perfection.",
+  "Our app takes time; your party's worth it."
+];
+
 export const Chatbot = () => {
   const {
     transcript,
@@ -20,6 +31,7 @@ export const Chatbot = () => {
     stopListening, // Function to stop voice recognition
   } = useSpeechRecognition();
 
+  const [messageIndex, setMessageIndex] = useState(0);
   const [userMessage, setUserMessage] = useState("");
   const [chatResult, setChatResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,33 +42,43 @@ export const Chatbot = () => {
 
   const [boxPosition, setBoxPosition] = useState(-3);
 
-  const [boxPositiotop,setBoxPositionTop] = useState(-66)
+  const [boxPositiotop, setBoxPositionTop] = useState(-66);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
+    }, 4000); 
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleSlideClick = () => {
     if (window.innerWidth >= 479) {
-    const newPosition = boxPosition === -3 ? -49 : -3;
-    setBoxPosition(newPosition);
-    }else if(window.innerWidth <= 479){
+      const newPosition = boxPosition === -3 ? -49 : -3;
+      setBoxPosition(newPosition);
+    } else if (window.innerWidth <= 479) {
       const newPosition = boxPositiotop === -66 ? 2 : -66;
       setBoxPositionTop(newPosition);
     }
   };
 
-  // const simulateLoading = () => {
-  //   setProgress(0); // Reset progress to 0
+  const simulateLoading = () => {
+    setProgress(0); // Reset progress to 0
 
-  //   const interval = 100; // Adjust this interval as needed
-  //   const duration = 143000; // Adjust this duration as needed
+    const interval = 100; // Adjust this interval as needed
+    const duration = 143000; // Adjust this duration as needed
 
-  //   const steps = duration / interval;
+    const steps = duration / interval;
 
-  //   for (let i = 0; i <= steps; i++) {
-  //     setTimeout(() => {
-  //       const newProgress = (i / steps) * 100;
-  //       setProgress(newProgress);
-  //     }, i * interval);
-  //   }
-  // };
+    for (let i = 0; i <= steps; i++) {
+      setTimeout(() => {
+        const newProgress = (i / steps) * 100;
+        setProgress(newProgress);
+      }, i * interval);
+    }
+  };
 
   const handleSubmitChat = async (e) => {
     e.preventDefault();
@@ -69,7 +91,7 @@ export const Chatbot = () => {
     setIsLoading(true);
     setUserMessage("");
     resetTranscript();
-    // simulateLoading();
+    simulateLoading();
 
     try {
       let res = await axios.post("http://127.0.0.1:5000/chat", {
@@ -154,18 +176,14 @@ export const Chatbot = () => {
         // border = "1px solid blue"
         justifyContent="center"
         alignItems={"center"}
-        bg = "rgb(243,243,243)"
-        zIndex={{base : "2", sm : "0"}}
+        bg="rgb(243,243,243)"
+        zIndex={{ base: "2", sm: "0" }}
       >
-        <Box >
-          <LogoImg
-            style={{ width: "90%", margin: "auto" }}
-            src={logo}
-            alt=""
-          />
+        <Box>
+          <LogoImg style={{ width: "90%", margin: "auto" }} src={logo} alt="" />
           <Text
-            fontSize={{base : "5xl" , sm : "6xl"}}
-            p = {{base : 4, sm : 0}}
+            fontSize={{ base: "5xl", sm: "6xl" }}
+            p={{ base: 4, sm: 0 }}
             color="rgb(249,113,87)"
             style={{ textShadow: "2px 2px 0 #000" }}
             fontFamily="pacifico"
@@ -186,15 +204,18 @@ export const Chatbot = () => {
       >
         <Flex
           // display="none"
-          w={{base : "85%", sm : "50%"}}
-          h={{base : "60vh", sm : "80vh"}}
+          w={{ base: "85%", sm: "50%" }}
+          h={{ base: "60vh", sm: "80vh" }}
           pos="absolute"
-          left={{base : "7%", sm : `${boxPosition}%`}}
-          top={{base : `${boxPositiotop}%`, sm : "10%"}}
+          left={{ base: "7%", sm: `${boxPosition}%` }}
+          top={{ base: `${boxPositiotop}%`, sm: "10%" }}
           bg="rgb(253,100,90)"
           className="recommendedBox"
-          transition={{base : "top 0.5s ease-in-out", sm : "left 0.5s ease-in-out"}}
-          zIndex={{base : "1", sm : "-1"}}
+          transition={{
+            base: "top 0.5s ease-in-out",
+            sm: "left 0.5s ease-in-out",
+          }}
+          zIndex={{ base: "1", sm: "-1" }}
           overflow="hidden"
           justifyContent={"center"}
           alignItems="center"
@@ -206,12 +227,14 @@ export const Chatbot = () => {
           <Button
             className="slideClick"
             pos={"absolute"}
-            left={{base : "44%", sm : "0"}}
+            left={{ base: "44%", sm: "0" }}
             onClick={handleSlideClick}
-            top={{base : "95%", sm : "45%"}}
-            w = {{base : "50px", sm : "10px"}}
-            h = {{base : "20px", sm : "40px"}}
-          > </Button>
+            top={{ base: "95%", sm: "45%" }}
+            w={{ base: "50px", sm: "10px" }}
+            h={{ base: "20px", sm: "40px" }}
+          >
+            {" "}
+          </Button>
 
           <Flex
             direction={"column"}
@@ -231,7 +254,7 @@ export const Chatbot = () => {
                 }
                 borderRadius="20px"
               >
-                <Box w="100%" p={{base : "3", sm : "2"}}>
+                <Box w="100%" p={{ base: "3", sm: "2" }}>
                   <img
                     style={{ borderRadius: "10px" }}
                     src={item.image}
@@ -313,7 +336,15 @@ export const Chatbot = () => {
                 {message.role === "bot" &&
                   message.images &&
                   message.images.length > 0 && (
-                    <Grid  templateColumns={{base : "repeat(1,1fr)", sm : "repeat(3,1fr)"}} gap="3" p="3" placeItems={"center"}>
+                    <Grid
+                      templateColumns={{
+                        base: "repeat(1,1fr)",
+                        sm: "repeat(3,1fr)",
+                      }}
+                      gap="3"
+                      p="3"
+                      placeItems={"center"}
+                    >
                       {message.images.map((imageURL) => (
                         <img
                           style={{
@@ -347,6 +378,16 @@ export const Chatbot = () => {
                   alt=""
                 />
                 {/* <div style={{ fontSize: "24px" }}>{Math.round(progress)}%</div> */}
+                <Progress
+                  w="60%"
+                  m="auto"
+                  hasStripe
+                  value={progress}
+                  colorScheme="orange"
+                />
+                <div>
+                  <Text color="rgb(154,0,0)" mt = "10px" fontWeight={"bold"} >{messages[messageIndex]}</Text>
+                </div>
               </div>
             )}
           </Box>
@@ -413,36 +454,28 @@ const Form = styled.form`
   }
 `;
 
-
 const LoadingImg = styled.img`
+  width: 15%;
+  left: 40%;
 
-width : 15%;
-left : 40%;
-
-@media screen and (max-width: 479px) {
-  width : 30%;
-  left : 35%;
+  @media screen and (max-width: 479px) {
+    width: 30%;
+    left: 35%;
   }
-
-`
+`;
 
 const ChatConvo = styled.div`
+  padding: 10px 30px 10px 30px;
 
-padding: 10px 30px 10px 30px;
-
-
-@media screen and (max-width: 479px) {
-  margin-top : 30px
+  @media screen and (max-width: 479px) {
+    margin-top: 30px;
   }
-
-`
+`;
 
 const LogoImg = styled.img`
+  display: inline;
 
-display : inline;
-
-@media screen and (max-width: 479px) {
-  display : none;
+  @media screen and (max-width: 479px) {
+    display: none;
   }
-
-`
+`;
