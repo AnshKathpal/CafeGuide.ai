@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from "axios";
 import { Input, Button, Box, Flex, Text, Grid } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
@@ -23,6 +23,10 @@ const messages = [
 ];
 
 export const Chatbot = () => {
+
+  const interval = useRef(null);
+
+
   const {
     transcript,
     resetTranscript,
@@ -67,18 +71,33 @@ export const Chatbot = () => {
   const simulateLoading = () => {
     setProgress(0); // Reset progress to 0
 
-    const interval = 100; // Adjust this interval as needed
+    const steps = 100; // Adjust this interval as needed
     const duration = 143000; // Adjust this duration as needed
 
-    const steps = duration / interval;
+    const stepDuration = duration / steps;
 
-    for (let i = 0; i <= steps; i++) {
-      setTimeout(() => {
-        const newProgress = (i / steps) * 100;
+    let currentStep = 0;
+    const step = () => {
+      if (currentStep < steps) {
+        const newProgress = ((currentStep + 1) / steps) * 100;
         setProgress(newProgress);
-      }, i * interval);
-    }
+        currentStep++;
+
+        interval.current = setTimeout(step, stepDuration);
+      }
+    };
+
+    step();
   };
+
+
+  useEffect(() => {
+    return () => {
+      if (interval.current) {
+        clearTimeout(interval.current);
+      }
+    };
+  }, []);
 
   const handleSubmitChat = async (e) => {
     e.preventDefault();

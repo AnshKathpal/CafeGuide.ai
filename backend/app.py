@@ -234,8 +234,7 @@ def chat():
         print(names)
         images = [item["image"] for item in arguments["data"]]
         print(images)
-        recommendations = [item["recommendation"]
-                           for item in arguments["data"]]
+        recommendations = [item.get("recommendation") for item in arguments["data"]]
         print(recommendations)
 
         response_data = {
