@@ -57,7 +57,7 @@ vectordb = Chroma.from_documents(
     persist_directory=persist_directory
 )
 
-# llm = OpenAI(openai_api_key=openai.api_key)
+
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=1)
 
 qa_chain = RetrievalQA.from_chain_type(
