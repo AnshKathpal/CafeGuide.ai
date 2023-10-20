@@ -222,7 +222,6 @@ export const Chatbot = () => {
         zIndex={1}
       >
         <Flex
-          // display="none"
           w={{ base: "85%", sm: "50%" }}
           h={{ base: "60vh", sm: "80vh" }}
           pos="absolute"
