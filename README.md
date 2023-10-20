@@ -29,3 +29,11 @@ Ask for cafe recommendations based on your criteria, such as location, cuisine, 
 Receive personalized suggestions from the chatbot and make an informed decision on your next cafe adventure.
 
 CafeGuide.ai is your key to discovering the hidden gems and popular coffee spots in New Delhi. Embrace the future of cafe exploration with this AI-powered chatbot.
+
+<img width="1680" alt="Screenshot 2023-10-20 at 3 58 53 PM" src="https://github.com/AnshKathpal/CafeGuide.ai/assets/115460552/1ed3112d-2429-4f7c-86b0-743b320f1810">
+
+<img width="1680" alt="Screenshot 2023-10-20 at 3 59 15 PM" src="https://github.com/AnshKathpal/CafeGuide.ai/assets/115460552/58a85d53-344d-4877-9c6d-1233f8f75462">
+
+<img width="1680" alt="Screenshot 2023-10-20 at 3 58 30 PM" src="https://github.com/AnshKathpal/CafeGuide.ai/assets/115460552/ce6b8f4f-ec3b-4c2e-864e-b58caf820642">
+
+<img width="1680" alt="Screenshot 2023-10-20 at 3 58 44 PM" src="https://github.com/AnshKathpal/CafeGuide.ai/assets/115460552/183a4b50-7513-463a-9770-432c02c1157f">
