@@ -47,7 +47,6 @@ for document in texts:
 
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 
-# print(texts)
 
 persist_directory = "docs/chroma/"
 
