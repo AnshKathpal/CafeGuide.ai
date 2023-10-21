@@ -20,6 +20,9 @@ import json
 app = Flask(__name__)
 CORS(app)
 
+port = int(os.environ.get("PORT", 5000))
+print(port)
+
 subprocess.run(["rm", "-rf", "./docs/chroma"])
 
 load_dotenv(find_dotenv())
@@ -220,5 +223,5 @@ def format_links_as_html(text):
     return " ".join(formatted_text)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port  = port)
 
