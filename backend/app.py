@@ -184,7 +184,7 @@ def chat():
         print(arguments, "args")
 
         ids = [item['id'] for item in arguments['data']]
-        # print(ids)
+     
         names = [item["name"] for item in arguments["data"]]
         # print(names)
         images = [item["image"] for item in arguments["data"]]
