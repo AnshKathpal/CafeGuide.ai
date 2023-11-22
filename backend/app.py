@@ -55,8 +55,6 @@ for document in texts:
 
 
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
-
-
 persist_directory = "docs/chroma/"
 
 vectordb = Chroma.from_documents(
