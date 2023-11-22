@@ -6,4 +6,3 @@ langchain
 numpy
 openai
 python-dotenv
-tiktoken
