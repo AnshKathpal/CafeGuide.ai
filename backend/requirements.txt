@@ -6,3 +6,4 @@ langchain
 numpy
 openai
 python-dotenv
+pydantic==2.5.2
