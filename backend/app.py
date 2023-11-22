@@ -53,7 +53,6 @@ for document in texts:
     page_content = document.page_content
     paragraphs.append(page_content)
 
-
 embeddings = OpenAIEmbeddings(openai_api_key=openai.api_key)
 persist_directory = "docs/chroma/"
 
